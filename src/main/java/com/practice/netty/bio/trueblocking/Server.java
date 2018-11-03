@@ -26,8 +26,7 @@ public class Server {
     public static void handlerClient(Socket socket) throws IOException {
         InputStream inputStream = socket.getInputStream();
         byte[] buff = new byte[1024];
-        int len;
-        while ((len = inputStream.read(buff)) != -1){
+        while (inputStream.read(buff) != -1){
             String message = buff.toString();
             System.out.println(message);
             socket.getOutputStream().write(buff);

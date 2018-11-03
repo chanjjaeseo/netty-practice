@@ -41,7 +41,7 @@ public class NettyTelnetServer {
     public static void main(String[] args) throws InterruptedException {
         run();
         // sleep 3 minutes
-        Thread.sleep(60 * 3);
+        Thread.sleep(60 * 3 * 1000);
         close();
     }
 
