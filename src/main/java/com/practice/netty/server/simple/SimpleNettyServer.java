@@ -8,12 +8,12 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 public class SimpleNettyServer {
 
-    private static EventLoopGroup bossGroup = new NioEventLoopGroup();
-    private static EventLoopGroup workerGroup = new NioEventLoopGroup();
+    private EventLoopGroup bossGroup = new NioEventLoopGroup();
+    private EventLoopGroup workerGroup = new NioEventLoopGroup();
 
     private static int port = 8888;
 
-    public static void run() throws InterruptedException {
+    public void run() throws InterruptedException {
         ServerBootstrap server = new ServerBootstrap();
 
         server.group(bossGroup, workerGroup)
@@ -27,16 +27,17 @@ public class SimpleNettyServer {
         channelFuture.channel().closeFuture().sync();
     }
 
-    public static void close() {
+    public void close() {
         bossGroup.shutdownGracefully();
         workerGroup.shutdownGracefully();
     }
 
     public static void main(String[] args) throws InterruptedException {
+        SimpleNettyServer server = new SimpleNettyServer();
         try{
-            run();
+            server.run();
         } finally {
-            close();
+            server.close();
         }
     }
 
