@@ -5,88 +5,45 @@
 		<!-- <script type="text/javascript" src="js/jquery.js"></script> -->
 		<!-- <script type="text/javascript" src="js/socket.js"></script> -->
 		
-		<script src="http://cdn.jsdelivr.net/sockjs/1/sockjs.min.js"></script>
 		<title>Web Socket Test</title>
 	</head>
-	<script language="javascript">
-
-	</script>
 	<body>
-		<table>
-			<tr>
-				<td>Message</td>
-				<td><input type="text" id="message"></td>
-			</tr>
-			<tr>
-				<td>Text</td>
-				<td><input type="text" id="text"></td>
-			</tr>
-			<tr>
-				<td>
-					<input id="sendbutton" type="button" value="send" onClick="sendMessage()">
-				</td>
-			</tr>
-		</table>
-		<script type="text/javascript">
-			
-			var ws = new WebSocket("ws://127.0.0.1:8080/ws");
-			
-			
-			
-			window.onload = function(){
-				initWs(ws);
-				ws.onopen()
-			};
-			
-			
-			ws.addEventListener('open', function (event) {
-				alert("open");
-				this.send('Hello Server!');
-			});
-			
-			function sendMessage() {
-				var text = document.getElementById("text")
-				var textValue = text.value;
-				send(textValue);
-			}
-			
+		<div>发送消息：</div>
+		<input type="text" id="msgContent">
+		<input type="button" value="点击发送" onclick="CHAT.chat()">
+		<div>接收消息：</div>
+		<div id="receivedMsg" style="background-color: gainsboro"></div>
+		<script type="application/javascript">
+			window.CHAT = {
+				socket: null,
 
-			function send(data)
-			{	
-				//if(ws.readyState == WebSocket.OPEN) {
-					console.log("Send:"+data);
-					ws.send(data);
-				//} else {
-				//	alert("WebSocket连接建立失败");  
-				//}
-			}
-			
-			function initWs(ws) {
-				if (window.WebSocket) {
-					ws.onopen = function() {
-						console.info("success open websocket");
-						this.send("hhhhh");
-					};
-					
-					ws.onmessage = function(event) {
-						var message = event.data;
-						console.info("has receiver" + message);
-						handlerMessage(message);
+				init:function () {
+					if (window.WebSocket) {
+						CHAT.socket = new WebSocket("ws://127.0.0.1:8080/ws");
+						CHAT.socket.onopen = function() {
+                            console.info("连接建立成功 ...");
+						};
+						CHAT.socket.onclose = function() {
+						    console.info("连接关闭 ...");
+						};
+						CHAT.socket.onerror = function () {
+							console.error("connection error ...");
+                        };
+						CHAT.socket.onmessage = function (e) {
+							console.info("接收到消息" + e.data);
+							var recMessage = document.getElementById("receivedMsg");
+                            recMessage.innerHTML = recMessage.innerHTML + "<br>" + e.data;
+                        }
+					} else {
+					    alert("浏览器不支持websocket");
 					}
-					ws.onclose = function(event) {
-						console.info("websocket has closed", event);
-					}
-				} else {
-					console.info("浏览器不支持websocket")
-				}
+				},
+				chat:function () {
+					var msg = document.getElementById("msgContent");
+					CHAT.socket.send(msg.value);
+                }
 			}
-			
-
-
-			function handlerMessage(message) {
-				var element = window.document.getElementById("message");
-				element.value(message);
-			}
+			CHAT.init();
 		</script>
 	</body>
 </html>

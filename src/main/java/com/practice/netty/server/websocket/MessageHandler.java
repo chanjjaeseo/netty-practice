@@ -7,14 +7,13 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
-import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Iterator;
+import java.time.LocalDateTime;
 
-@ChannelHandler.Sharable
+
 public class MessageHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
     private static ChannelGroup clientGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
@@ -24,13 +23,12 @@ public class MessageHandler extends SimpleChannelInboundHandler<TextWebSocketFra
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
         Channel channel = ctx.channel();
-        clientGroup.writeAndFlush(new TextWebSocketFrame("[SERVER] - " + channel.remoteAddress() + " 加入"));
         clientGroup.add(channel);
     }
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-        clientGroup.remove(ctx.channel());
+//        clientGroup.remove(ctx.channel());
         logger.info("断开连接 channelId:" + ctx.channel().id().asLongText());
     }
 
@@ -38,7 +36,16 @@ public class MessageHandler extends SimpleChannelInboundHandler<TextWebSocketFra
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
         String content = msg.text();
         logger.info("recived message :" + content);
-        ctx.writeAndFlush(msg);
-        clientGroup.writeAndFlush(new TextWebSocketFrame("Client " + ctx.channel() + " joined"));
+//        ctx.writeAndFlush(msg);
+        for(Channel channel : clientGroup) {
+            channel.writeAndFlush(
+                    new TextWebSocketFrame("服务器在 ["
+                            + LocalDateTime.now()
+                            + "]接收到消息: " + content));
+        }
+//        clientGroup.writeAndFlush(
+//                new TextWebSocketFrame("服务器在 ["
+//                        + LocalDateTime.now()
+//                        + "]接收到消息: " + content));
     }
 }
