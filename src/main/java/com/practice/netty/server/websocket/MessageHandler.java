@@ -28,7 +28,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<TextWebSocketFra
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-//        clientGroup.remove(ctx.channel());
+        clientGroup.remove(ctx.channel());
         logger.info("断开连接 channelId:" + ctx.channel().id().asLongText());
     }
 
@@ -36,13 +36,14 @@ public class MessageHandler extends SimpleChannelInboundHandler<TextWebSocketFra
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
         String content = msg.text();
         logger.info("recived message :" + content);
-//        ctx.writeAndFlush(msg);
+
         for(Channel channel : clientGroup) {
             channel.writeAndFlush(
                     new TextWebSocketFrame("服务器在 ["
                             + LocalDateTime.now()
                             + "]接收到消息: " + content));
         }
+        // 与for循环遍历方式效果一样
 //        clientGroup.writeAndFlush(
 //                new TextWebSocketFrame("服务器在 ["
 //                        + LocalDateTime.now()

@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Web Socket Test</title>
+</head>
+<body>
+	<p>Message</p>
+	<div  id="message"></div>
+	<table>
+		<tr>
+			<td>Text</td>
+			<td><input type="text" id="text"></td>
+		</tr>
+		<tr>
+			<td>
+				<input id="sendbutton" type="button" value="send" onClick="sendMessage()">
+			</td>
+		</tr>
+	</table>
+	<script type="text/javascript">
+
+		var ws = new WebSocket("ws://127.0.0.1:8080/ws");
+
+
+
+		window.onload = function(){
+			initWs(ws);
+		};
+
+
+		ws.addEventListener('open', function (event) {
+			alert("socket连接已准备完毕");
+		});
+
+		function sendMessage() {
+			var text = document.getElementById("text")
+			var textValue = text.value;
+			send(textValue);
+		}
+
+
+		function send(data)
+		{
+			if(ws.readyState == WebSocket.OPEN) {
+				console.log("Send:"+data);
+				ws.send(data);
+			} else {
+				alert("WebSocket连接建立失败");
+			}
+		}
+
+		function initWs(ws) {
+			if (window.WebSocket) {
+				ws.onopen = function() {
+					console.info("success open websocket");
+				};
+
+				ws.onmessage = function(event) {
+					var message = event.data;
+					console.info("has receiver" + message);
+					handlerMessage(message);
+				}
+				ws.onclose = function(event) {
+					console.info("websocket has closed", event);
+				}
+			} else {
+				console.info("浏览器不支持websocket")
+			}
+		}
+
+
+
+		function handlerMessage(message) {
+			var element = document.getElementById("message");
+			element.innerHTML = message;
+		}
+	</script>
+</body>
+</html>
