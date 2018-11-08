@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 public class WebSocketServer {
 
-    private final static int port = 8080;
+    private final static int port = 9080;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
