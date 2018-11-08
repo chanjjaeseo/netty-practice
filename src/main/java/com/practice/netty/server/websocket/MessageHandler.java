@@ -35,8 +35,6 @@ public class MessageHandler extends SimpleChannelInboundHandler<TextWebSocketFra
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
         String content = msg.text();
-        // 读取消息后释放堆外内存
-        msg.release();
         logger.info("recived message :" + content);
 
         for(Channel channel : clientGroup) {
