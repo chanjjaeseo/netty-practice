@@ -24,6 +24,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<TextWebSocketFra
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
         Channel channel = ctx.channel();
         clientGroup.add(channel);
+        logger.info("接收连接 channelId:" + ctx.channel().id().asLongText());
     }
 
     @Override

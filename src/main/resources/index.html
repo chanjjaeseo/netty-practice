@@ -19,7 +19,7 @@
 
 				init:function () {
 					if (window.WebSocket) {
-						CHAT.socket = new WebSocket("ws://127.0.0.1:8080/ws");
+						CHAT.socket = new WebSocket("ws://127.0.0.1:9080/ws");
 						CHAT.socket.onopen = function() {
                             console.info("连接建立成功 ...");
 						};
