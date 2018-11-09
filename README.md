@@ -1,2 +1,2 @@
 ## netty-practice
-some sample used netty
+Detailed use exercises from Java NIO to Netty.
