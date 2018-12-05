@@ -1,13 +1,15 @@
-package com.practice.netty.server.decode.sticky.server;
+package com.practice.netty.server.decode;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.ChannelPipeline;
 
 public class MessageHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        ChannelPipeline channelPipeline = ctx.channel().pipeline();
         ByteBuf msgBuf = (ByteBuf) msg;
         int readableBytes = msgBuf.readableBytes();
         // 1. byte array

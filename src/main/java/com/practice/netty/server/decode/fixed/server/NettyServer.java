@@ -1,10 +1,11 @@
-package com.practice.netty.server.decode.sticky.server;
+package com.practice.netty.server.decode.fixed.server;
 
 import com.practice.netty.server.decode.MessageHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.LineBasedFrameDecoder;
 
 public class NettyServer {
 
@@ -21,6 +22,9 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<Channel>() {
                     @Override
                     protected void initChannel(Channel channel) throws Exception {
+//                        channel.pipeline().addLast(new LineBasedFrameDecoder(1024));
+//                        new FixedLengthFrameDecoder();
+//                        new DelimiterBasedFrameDecoder();
                         channel.pipeline().addLast(new MessageHandler());
                     }
                 });
