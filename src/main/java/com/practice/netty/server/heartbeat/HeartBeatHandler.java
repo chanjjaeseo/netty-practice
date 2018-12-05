@@ -22,7 +22,6 @@ public final class HeartBeatHandler extends ChannelInboundHandlerAdapter {
 
     private static final ByteBuf HEARTBEAT_SEQUENCE = Unpooled.unreleasableBuffer(Unpooled.copiedBuffer("HEART_BEAT", CharsetUtil.UTF_8));
 
-    private static final TextWebSocketFrame text = new TextWebSocketFrame(HEARTBEAT_SEQUENCE);
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
@@ -30,8 +29,7 @@ public final class HeartBeatHandler extends ChannelInboundHandlerAdapter {
             // 在这里发送消息
             // listener检测释放发送成功，如果未发送成功证明客户端已离线，则关闭channel
             logger.info("向客户端发送心跳确认, channelId = " + ctx.channel().id().asLongText());
-            HEARTBEAT_SEQUENCE.readerIndex(0);
-//            TextWebSocketFrame text = new TextWebSocketFrame(HEARTBEAT_SEQUENCE.duplicate());
+            TextWebSocketFrame text = new TextWebSocketFrame(HEARTBEAT_SEQUENCE.duplicate());
             ctx.writeAndFlush(text).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
         } else {
             super.userEventTriggered(ctx, evt);
