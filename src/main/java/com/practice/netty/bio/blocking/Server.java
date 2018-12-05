@@ -33,7 +33,7 @@ public class Server {
             try {
                 // 接收客户端连接
                 Socket client = serverSocket.accept();
-                // 交给另一个线程处理
+                // 交给线程池处理
                 executor.execute(new ClientHandler(client));
             } catch (IOException e) {
                 System.out.println("接收客户端连接失败");

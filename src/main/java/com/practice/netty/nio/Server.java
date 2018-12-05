@@ -18,9 +18,6 @@ public class Server {
 
     private Selector selector;
 
-    // heap buffer  && direct buffer
-    ByteBuffer buffer = ByteBuffer.allocate(1024);
-
     public void initServer(){
         try {
 
@@ -72,6 +69,9 @@ public class Server {
 
     private void handlerRead(SelectionKey key) throws IOException {
         SocketChannel socketChannel = (SocketChannel) key.channel();
+
+        // heap buffer
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
 
         while (true) {
 
